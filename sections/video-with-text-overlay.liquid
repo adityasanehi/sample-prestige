@@ -1,0 +1,114 @@
+{%- liquid
+  assign size_classes = 'background-video-wrapper--' | append: section.settings.video_style
+
+  if section.settings.video_style_desktop == 'same'
+    assign video_style_desktop = section.settings.video_style
+  else
+    assign video_style_desktop = section.settings.video_style_desktop
+    assign size_classes = size_classes | append: ' lg:background-video-wrapper--' | append: video_style_desktop
+  endif
+
+  assign heading_size_class = section.settings.heading_size 
+  assign content_position = section.settings.content_position
+  assign text_align = section.settings.text_alignment 
+  assign content_width_desktop = section.settings.content_width_desktop 
+  assign text_color = section.settings.text_color 
+
+-%}
+
+<section class="section-video"
+         data-section-type="video-with-text-overlay"
+         data-section-id="{{ section.id }}"
+         data-has-background-video>
+  <div class="">
+    <div class="background-video-wrapper {{ size_classes }}">
+      {% assign component_id = 'background-video-' | append: section.id %}
+      {% render 'background-video'
+        extra_classes: 'video-with-text-overlay__background-video',
+        video: section.settings.video_url,
+        fallback_image: section.settings.fallback_image,
+        component_id: component_id,
+    %}
+    </div>
+  </div>
+</section>
+
+
+{% schema %}
+{
+  "name": "Video MP4",
+  "class": "has-full-screen-setting",
+  "settings": [
+    {
+      "id": "video_url",
+      "type": "text",
+      "label": "Video URL",
+      "info": "Accepts YouTube or .mp4 links",
+      "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
+    },
+    {
+      "type": "select",
+      "id": "video_style",
+      "label": "Aspect ratio – mobile:",
+      "options": [
+        {
+          "value": "four-three",
+          "label": "Standard"
+        },
+        {
+          "value": "widescreen",
+          "label": "Widescreen"
+        },
+        {
+          "value": "cinematic",
+          "label": "Extra wide"
+        },
+        {
+          "value": "full-screen",
+          "label": "Full screen"
+        }
+      ],
+      "default": "widescreen"
+    },
+    {
+      "type": "select",
+      "id": "video_style_desktop",
+      "label": "Aspect ratio – desktop:",
+      "options": [
+        {
+          "value": "same",
+          "label": "Same as mobile"
+        },
+        {
+          "value": "four-three",
+          "label": "Standard"
+        },
+        {
+          "value": "widescreen",
+          "label": "Widescreen"
+        },
+        {
+          "value": "cinematic",
+          "label": "Extra wide"
+        },
+        {
+          "value": "full-screen",
+          "label": "Full screen"
+        }
+      ],
+      "default": "same"
+    },
+    {
+      "id": "fallback_image",
+      "type": "image_picker",
+      "label": "Fallback image",
+      "info": "Shown if video fails to load or play"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video MP4"
+    }
+  ]
+}
+{% endschema %}
